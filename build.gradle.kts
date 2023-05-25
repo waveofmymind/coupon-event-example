@@ -1,29 +1,93 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+val jar: Jar by tasks
+val bootJar: org.springframework.boot.gradle.tasks.bundling.BootJar by tasks
+
+bootJar.enabled = false
+jar.enabled = true
+
 plugins {
-    id("org.springframework.boot") version "3.0.6"
+    id("org.springframework.boot") version "3.1.0"
     id("io.spring.dependency-management") version "1.1.0"
-    kotlin("jvm") version "1.7.22"
-    kotlin("plugin.spring") version "1.7.22"
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.8.21"
+    kotlin("jvm") version "1.8.21"
+    kotlin("plugin.spring") version "1.8.21"
+    kotlin("plugin.allopen") version "1.8.21"
+    kotlin("kapt") version "1.8.21"
+    id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
+    id("org.jlleitschuh.gradle.ktlint-idea") version "10.0.0"
 }
 
 group = "com.wave"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
+allprojects {
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    apply(plugin = "kotlin-allopen")
+    apply(plugin = "kotlin-jpa")
+    apply(plugin = "org.jetbrains.kotlin.plugin.noarg")
+
+    ktlint {
+        disabledRules.apply {
+            add("import-ordering")
+            add("no-wildcard-imports")
+        }
+        filter {
+            exclude("*.kts")
+            exclude("**/generated/**")
+        }
+    }
+}
+
+subprojects {
+    apply(plugin = "kotlin")
+    apply(plugin = "org.jetbrains.kotlin.plugin.spring")
+    apply(plugin = "org.springframework.boot")
+    apply(plugin = "io.spring.dependency-management")
+    java.sourceCompatibility = JavaVersion.VERSION_17
+    repositories {
+        mavenCentral()
+        maven { url = uri("https://repo.spring.io/milestone") }
+        maven { url = uri("https://repo.spring.io/snapshot") }
+    }
+    val implementation by configurations
+
+    dependencies {
+        implementation(kotlin("stdlib-jdk8"))
+        implementation("org.springframework.boot:spring-boot-starter")
+        implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.1")
+        implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.1")
+        testImplementation("io.kotest:kotest-runner-junit5:4.6.3")
+        testImplementation("io.kotest:kotest-assertions-core:4.6.3")
+        testImplementation("io.mockk:mockk:1.12.2")
+        runtimeOnly("com.h2database:h2")
+        runtimeOnly("mysql:mysql-connector-java")
+    }
+
+    tasks.withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+}
+
 repositories {
     mavenCentral()
+    maven { url = uri("https://repo.spring.io/milestone") }
+    maven { url = uri("https://repo.spring.io/snapshot") }
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("io.projectreactor:reactor-test")
+}
+
+tasks {
+    register<Exec>("lint") {
+        commandLine = "./gradlew ktlintCheck".split(" ")
+    }
 }
 
 tasks.withType<KotlinCompile> {
@@ -35,4 +99,10 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    testLogging {
+        showStackTraces = true
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+    }
 }
+
+
