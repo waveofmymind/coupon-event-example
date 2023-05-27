@@ -11,4 +11,4 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
-class CoreConfigLoader
+class CoreConfigurationLoader

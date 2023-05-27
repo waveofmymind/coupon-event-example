@@ -21,19 +21,14 @@ allOpen {
     annotation("javax.persistence.Embeddable")
 }
 
+group = "org.example"
+version = "0.0.1-SNAPSHOT"
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.redisson:redisson-spring-boot-starter:3.16.4")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
-    api("com.querydsl:querydsl-jpa")
-    //querydsl
-    implementation("com.querydsl:querydsl-core:5.0.0")
-    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
-    annotationProcessor ("com.querydsl:querydsl-apt:5.0.0:jakarta")
-    implementation("com.amazonaws:aws-java-sdk-ssm")
-    implementation(platform("com.amazonaws:aws-java-sdk-bom:1.11.1034"))
 
-    kapt(group = "com.querydsl", name = "querydsl-apt", classifier = "jpa") // 2)
 
     sourceSets.main {
         withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {
