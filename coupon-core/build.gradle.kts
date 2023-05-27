@@ -28,13 +28,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.redisson:redisson-spring-boot-starter:3.16.4")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
-
-
-    sourceSets.main {
-        withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {
-            kotlin.srcDir("$buildDir/generated/source/kapt/main")
-        }
-    }
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

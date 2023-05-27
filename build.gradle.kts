@@ -14,8 +14,6 @@ plugins {
     kotlin("plugin.spring") version "1.8.21"
     kotlin("plugin.allopen") version "1.8.21"
     kotlin("kapt") version "1.8.21"
-    id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
-    id("org.jlleitschuh.gradle.ktlint-idea") version "10.0.0"
 }
 
 group = "com.example"
@@ -23,21 +21,10 @@ version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 allprojects {
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
     apply(plugin = "kotlin-allopen")
     apply(plugin = "kotlin-jpa")
     apply(plugin = "org.jetbrains.kotlin.plugin.noarg")
 
-    ktlint {
-        disabledRules.apply {
-            add("import-ordering")
-            add("no-wildcard-imports")
-        }
-        filter {
-            exclude("*.kts")
-            exclude("**/generated/**")
-        }
-    }
 }
 
 subprojects {
@@ -62,6 +49,8 @@ subprojects {
         testImplementation("io.kotest:kotest-runner-junit5:4.6.3")
         testImplementation("io.kotest:kotest-assertions-core:4.6.3")
         testImplementation("io.mockk:mockk:1.12.2")
+        runtimeOnly("com.h2database:h2")
+        runtimeOnly("com.mysql:mysql-connector-j")
     }
 
     tasks.withType<KotlinCompile> {
@@ -82,11 +71,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-tasks {
-    register<Exec>("lint") {
-        commandLine = "./gradlew ktlintCheck".split(" ")
-    }
-}
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {

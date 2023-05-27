@@ -1,0 +1,23 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  datasource:
+    url: jdbc:mysql://localhost:3306/coupon?useUnicode=yes&characterEncoding=UTF-8&rewriteBatchedStatements=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: wave
+    password: 0913
+    hikari:
+      maximum-pool-size: 50
+      max-lifetime: 30000
+  jpa:
+    hibernate:
+      ddl-auto: none
+logging:
+  level:
+    sql:
+      debug
