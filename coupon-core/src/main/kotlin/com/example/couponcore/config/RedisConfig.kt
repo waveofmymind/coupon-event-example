@@ -19,10 +19,10 @@ import org.springframework.data.redis.serializer.StringRedisSerializer
 class RedisConfig {
 
     @Value("\${spring.data.redis.host}")
-    private val host = null
+    private lateinit var host: String
 
     @Value("\${spring.data.redis.port}")
-    private val port = 0
+    private var port: Int = 0
 
     @Bean
     fun redissonClient(): RedissonClient {
@@ -42,7 +42,7 @@ class RedisConfig {
                     ObjectMapper.DefaultTyping.EVERYTHING
                 )
         )
-        redisTemplate.setConnectionFactory(redisConnectionFactory)
+        redisTemplate.connectionFactory = redisConnectionFactory
         redisTemplate.keySerializer = StringRedisSerializer()
         redisTemplate.valueSerializer = serializer
         redisTemplate.hashKeySerializer = StringRedisSerializer()
