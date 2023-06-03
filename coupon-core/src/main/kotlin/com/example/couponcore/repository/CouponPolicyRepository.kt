@@ -8,11 +8,13 @@ import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
+import org.springframework.stereotype.Repository
 
+
+@Repository
 class CouponPolicyRepository(
-    private val couponPolicyJpaRepository: CouponJpaRepository
-) :
-QuerydslRepositorySupport(CouponPolicy::class.java), CouponJpaRepository by couponPolicyJpaRepository {
+    private val couponPolicyJpaRepository: CouponPolicyJpaRepository
+) : QuerydslRepositorySupport(CouponPolicy::class.java), CouponPolicyJpaRepository by couponPolicyJpaRepository {
 
     @PersistenceContext
     override fun setEntityManager(entityManager: EntityManager) {
@@ -38,8 +40,6 @@ QuerydslRepositorySupport(CouponPolicy::class.java), CouponJpaRepository by coup
     fun getProxy(id: Long): CouponPolicy {
         return couponPolicyJpaRepository.getReferenceById(id)
     }
-
 }
 
-
-interface CouponJpaRepository : JpaRepository<CouponPolicy,Long>
+interface CouponPolicyJpaRepository : JpaRepository<CouponPolicy, Long>
