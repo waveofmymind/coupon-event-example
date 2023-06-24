@@ -8,9 +8,6 @@ redis를 활용한 선착순 쿠폰 이벤트 처리
 - Spring Boot 3.1.0
 - Spring Data JPA
 - Spring Data Redis
-- Spring Batch
 
-## AS-IS
+## 요구사항 명세서
 
-
-## TO-BE
